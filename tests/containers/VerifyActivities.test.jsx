@@ -11,7 +11,7 @@ import society from '../../src/fixtures/society';
 
 const store = createMockStore(storeFixture);
 const history = { push: () => { }, location: { pathname: '' } };
-const roles = { successOps: '' };
+const roles = ['success'];
 const verifyActivitiesOpsSpy = spy();
 
 describe('<VerifyActivities />', () => {
@@ -24,7 +24,6 @@ describe('<VerifyActivities />', () => {
     societyActivities={society.loggedActivities}
     requesting={false}
     verifyActivitiesOps={verifyActivitiesOpsSpy}
-    roles={roles}
   />);
 
   it('should render without crashing', () => {
@@ -40,6 +39,7 @@ describe('<VerifyActivities />', () => {
             fetchSocietyInfo={() => { }}
             societyActivities={society.loggedActivities}
             requesting={false}
+            userRoles={roles}
           />
         </MemoryRouter>
       </Provider>,
@@ -75,7 +75,7 @@ describe('<VerifyActivities />', () => {
   });
 
   it('should have the <LinearLayout /> layout when role is successOps', () => {
-    component.setProps({ roles: { 'success ops': 'successOps1234abc' } });
+    component.setProps({ userRoles: ['success ops'] });
     expect(component.find('LinearLayout').length).toBe(1);
   });
 
