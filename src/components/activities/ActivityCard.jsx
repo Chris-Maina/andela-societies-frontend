@@ -36,6 +36,7 @@ class ActivityCard extends Component {
   * @property {Boolean} showButtons - Whether or not to show buttons
   * @property {Boolean} showPoints - Whether or not to show user points
   * @property {Boolean} showAmount - Whether or not to show user amount
+  * @property {Boolean} showCheckBox - To show the check box for the activity card
   */
   static propTypes = {
     category: PropType.string,
@@ -56,6 +57,7 @@ class ActivityCard extends Component {
     handleClick: PropType.func,
     id: PropType.string.isRequired,
     handleDeselectActivity: PropType.func,
+    showCheckBox: PropType.bool,
     wordCount: PropType.number,
   };
 
@@ -69,6 +71,7 @@ class ActivityCard extends Component {
     showLocation: false,
     showButtons: false,
     showMoreInfoButton: false,
+    showCheckBox: false,
     showPoints: false,
     showAmount: false,
     userCanEdit: false,
@@ -166,18 +169,21 @@ class ActivityCard extends Component {
     );
   }
 
-  renderCheckbox = () => (
-    (
-      <input
-        type='checkbox'
-        name='checkbox'
-        value={this.props.id}
-        className='activity__checkbox'
-        checked={this.state.isActivityChecked}
-        onChange={this.handleActivityChecked}
-      />
-    )
-  );
+
+  renderCheckbox = () => {
+    const activityCheckBox = (<input
+      type='checkbox'
+      name='checkbox'
+      value={this.props.id}
+      className='activity__checkbox'
+      checked={this.state.isActivityChecked}
+      onChange={this.handleActivityChecked}
+    />);
+    if (this.props.showCheckBox) {
+      return (activityCheckBox);
+    }
+    return '';
+  }
 
   renderVerifyButtons() {
     const { showMoreInfoButton, id, handleClick } = this.props;
