@@ -8,7 +8,7 @@ import {
 import config from '../../config';
 
 /**
- * @function fetchAllPendingRequests
+ * @function fetchAllActivitiesRequests
  * @return {Object} {{type: FETCH_ALL_ACTIVITIES_REQUEST}}
  */
 export const fetchAllActivitiesRequests = () => (
@@ -18,8 +18,8 @@ export const fetchAllActivitiesRequests = () => (
 );
 
 /**
- * @function fetchAllSuccess
- * @param info - array of fetch all activities
+ * @function fetchAllActivitiesSuccess
+ * @param activities - array of fetch all activities
  * @return {Object} {{type: FETCH_ALL_ACTIVITIES_SUCCESS, activities}}
  */
 export const fetchAllActivitiesSuccess = activities => (
