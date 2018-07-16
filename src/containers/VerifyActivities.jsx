@@ -43,10 +43,10 @@ class VerifyActivities extends Component {
   static propTypes = {
     fetchAllActivities: PropTypes.func,
     requesting: PropTypes.bool.isRequired,
-    verifyActivity: PropTypes.func.isRequired,
     history: PropTypes.shape({
       location: PropTypes.shape({ pathname: PropTypes.string.isRequired }).isRequired,
     }).isRequired,
+    verifyActivity: PropTypes.func,
     verifyActivitiesOps: PropTypes.func,
     allActivities: PropTypes.arrayOf(PropTypes.shape({})),
     userRoles: PropTypes.arrayOf(PropTypes.string),
@@ -55,6 +55,7 @@ class VerifyActivities extends Component {
   static defaultProps = {
     verifyActivitiesOps: () => { },
     fetchAllActivities: () => {},
+    verifyActivity: () => {},
     userRoles: [],
     allActivities: [],
   }
@@ -354,11 +355,9 @@ const mapStateToProps = state => ({
   userRoles: Object.keys(state.userProfile.info.roles),
 });
 
-const mapDispatchToProps = dispatch => ({
-  fetchAllActivities: () => dispatch(fetchAllActivities()),
-  fetchSocietyInfo: name => dispatch(fetchSocietyInfo(name)),
-  verifyActivity: (clickAction, activityId) => dispatch(verifyActivity(clickAction, activityId)),
-  verifyActivitiesOps: activityIds => dispatch(verifyActivitiesOps(activityIds)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(VerifyActivities);
+export default connect(mapStateToProps, {
+  fetchAllActivities,
+  fetchSocietyInfo,
+  verifyActivity,
+  verifyActivitiesOps,
+})(VerifyActivities);
