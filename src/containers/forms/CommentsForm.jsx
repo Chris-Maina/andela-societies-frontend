@@ -91,13 +91,11 @@ class CommentsForm extends Component {
     const { selectedItem } = this.props;
     const errors = validateFormFields({ comment });
     const clickAction = selectedItem.rejectClicked ? REJECT : MORE_INFO;
-
     if (errors.length) {
       this.setState({ errors });
     } else if (selectedItem.itemType === 'redemption') {
       this.props.verifyRedemption(selectedItem.id, clickAction, comment);
     } else if (selectedItem.itemType === 'activity') {
-      // action
       this.props.requestMoreInfo(selectedItem.id, comment);
     }
     this.handleCloseModal();

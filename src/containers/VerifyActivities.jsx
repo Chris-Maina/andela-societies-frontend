@@ -139,11 +139,11 @@ class VerifyActivities extends Component {
   handleClick = (clickAction, activityId) => {
     const { userRoles } = this.props;
     const { APPROVE, MORE_INFO } = clickActions;
-    if (hasAllowedRole(userRoles, [SUCCESS_OPS])) {
-      this.props.verifyActivitiesOps(activityId);
-    }
     switch (clickAction) {
     case APPROVE:
+      if (hasAllowedRole(userRoles, [SUCCESS_OPS])) {
+        this.props.verifyActivitiesOps(activityId);
+      }
       this.props.verifyActivity(clickAction, activityId);
       break;
     case MORE_INFO:

@@ -41,12 +41,15 @@ export const moreInfoSuccess = comment => (
   }
 );
 
-export const requestMoreInfo = commentData => (
+export const requestMoreInfo = (id, comment) => (
   (dispatch) => {
+    const commentData = {
+      id,
+      comment,
+    };
     dispatch(moreInfoRequest());
     return http.post(`${config.API_BASE_URL}/comments`, commentData)
       .then((response) => {
-        console.log(response);
         dispatch(moreInfoSuccess(response.data));
       })
       .catch(error => (
