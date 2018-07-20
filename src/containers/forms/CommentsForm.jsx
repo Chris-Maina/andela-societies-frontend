@@ -13,6 +13,7 @@ import SnackBar from '../../components/notifications/SnackBar';
 
 // thunk
 import { verifyRedemption } from '../../actions/verifyRedemptionActions';
+import { requestMoreInfo } from '../../actions/commentActions';
 
 // helpers
 import validateFormFields from '../../helpers/validateForm';
@@ -28,21 +29,22 @@ class CommentsForm extends Component {
   static defaultProps = {
     message: {},
     selectedItem: {},
-    deselectItem: () => { },
     closeModal: () => { },
+    requestMoreInfo: () => {},
+    verifyRedemption: () => {},
   };
   /**
    * @name propTypes
    */
   static propTypes = {
-    verifyRedemption: PropTypes.func.isRequired,
-    closeModal: PropTypes.func,
     message: PropTypes.shape({
       type: PropTypes.string,
       text: PropTypes.string,
     }),
     selectedItem: PropTypes.shape({ id: PropTypes.string }),
-    deselectItem: PropTypes.func,
+    verifyRedemption: PropTypes.func,
+    requestMoreInfo: PropTypes.func,
+    closeModal: PropTypes.func,
   }
 
   static getDerivedStateFromProps = (props, state) => {
@@ -92,10 +94,13 @@ class CommentsForm extends Component {
 
     if (errors.length) {
       this.setState({ errors });
-    } else {
+    } else if (selectedItem.itemType === 'redemption') {
       this.props.verifyRedemption(selectedItem.id, clickAction, comment);
-      this.handleCloseModal();
+    } else if (selectedItem.itemType === 'activity') {
+      // action
+      this.props.requestMoreInfo(selectedItem.id, comment);
     }
+    this.handleCloseModal();
   }
 
   /**
@@ -116,9 +121,6 @@ class CommentsForm extends Component {
    */
   handleCloseModal = () => {
     this.props.closeModal();
-    if (this.props.selectedItem.id) {
-      this.props.deselectItem();
-    }
     this.resetState();
   }
 
@@ -129,18 +131,39 @@ class CommentsForm extends Component {
    */
   renderItemDetails = (selectedItem) => {
     const {
-      society,
       center,
+      name,
       value,
-      reason,
+      society,
+      category,
+      points,
+      owner,
+      description,
     } = selectedItem;
-    const fields = {
-      society: society.name,
-      center: center.name,
-      points: value.toString(),
-      amount: `$${pointsToDollarConverter(value)}`,
-      reason,
-    };
+
+    let fields;
+    switch (selectedItem.itemType) {
+    case 'activity':
+      fields = {
+        category,
+        points: points.toString(),
+        description,
+        owner,
+        society: society.name,
+      };
+      break;
+    case 'redemption':
+      fields = {
+        society: society.name,
+        center: center.name,
+        points: value.toString(),
+        amount: `$${pointsToDollarConverter(value)}`,
+        reason: name,
+      };
+      break;
+    default:
+      return null;
+    }
     const displayNodes = Object.keys(fields).map(field =>
       <TextContent name={field} content={fields[field]} key={field} />);
     return displayNodes;
@@ -195,6 +218,7 @@ class CommentsForm extends Component {
 const mapDispatchToProps = dispatch => ({
   verifyRedemption: (redemption, clickAction, comment) =>
     (dispatch(verifyRedemption(redemption, clickAction, comment))),
+  requestMoreInfo: (id, comment) => dispatch(requestMoreInfo(id, comment)),
 });
 
 export default connect(null, mapDispatchToProps)(CommentsForm);

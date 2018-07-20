@@ -5,7 +5,7 @@ import {
   FETCH_USER_PROFILE_SUCCESS,
   FETCH_USER_PROFILE_FAILURE,
 } from '../types';
-import config from '../../config';
+// import config from '../../config';
 
 /**
  * @function requestUserProfile
@@ -48,7 +48,7 @@ export const requestUserProfileFailure = error => (
 export const fetchUserProfile = id => (
   (dispatch) => {
     dispatch(requestUserProfile());
-    return http.get(`${config.API_BASE_URL}/users/${id}`)
+    return http.get(`http://localhost:5000/users/${id}`)
       .then((response) => {
         dispatch(requestUserProfileSuccess(response.data.data));
       })
