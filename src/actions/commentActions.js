@@ -44,7 +44,7 @@ export const moreInfoSuccess = comment => (
 export const requestMoreInfo = (id, comment) => (
   (dispatch) => {
     const commentData = {
-      id,
+      commentedFor: id,
       comment,
     };
     dispatch(moreInfoRequest());
@@ -52,8 +52,8 @@ export const requestMoreInfo = (id, comment) => (
       .then((response) => {
         dispatch(moreInfoSuccess(response.data));
       })
-      .catch(error => (
-        dispatch(moreInfoFailure(error))
-      ));
+      .catch((error) => {
+        dispatch(moreInfoFailure(error));
+      });
   }
 );

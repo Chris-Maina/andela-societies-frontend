@@ -20,10 +20,10 @@ const commentsReducer = (state = initialState.commentsInfo, action) => {
   case MORE_INFO_SUCCESS:
     return {
       ...state,
-      comments: [...state.comments, action.comment],
+      comment: [...state.comment, action.comment.data],
       message: {
         type: 'success',
-        text: action.response.message,
+        text: action.comment.message,
       },
       requesting: false,
     };
