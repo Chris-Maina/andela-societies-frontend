@@ -16,7 +16,7 @@ import initialState from '../../src/reducers/initialState';
 
 const defaultState = initialState.commentsInfo;
 let expectedState;
-const error = new Error('Request failed with status code 400');
+const error = 'Error encountered while submitting your comment. Try again';
 
 describe('Comments Reducer tests', () => {
   it('should return the default state when given no action ', () => {
@@ -57,12 +57,12 @@ describe('Comments Reducer tests', () => {
       ...defaultState,
       requesting: false,
       hasError: false,
-      comment: [...commentData.data],
+      comment: [comment],
       message: {
         type: 'success',
-        text: commentData.message,
+        text: 'Successfully submitted your comment',
       },
     };
-    expect(commentsReducer(defaultState, moreInfoSuccess(commentData))).toEqual(expectedState);
+    expect(commentsReducer(defaultState, moreInfoSuccess({ ...commentData }))).toEqual(expectedState);
   });
 });

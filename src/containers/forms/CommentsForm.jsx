@@ -27,24 +27,27 @@ import clickActions from '../../constants/clickAction';
 
 class CommentsForm extends Component {
   static defaultProps = {
-    message: {},
+    message: {
+      type: '',
+      text: '',
+    },
     selectedItem: {},
-    closeModal: () => { },
-    requestMoreInfo: () => {},
-    verifyRedemption: () => {},
+    closeModal: null,
+    requestMoreInfo: null,
+    verifyRedemption: null,
   };
   /**
    * @name propTypes
    */
   static propTypes = {
-    message: PropTypes.shape({
-      type: PropTypes.string,
-      text: PropTypes.string,
-    }),
     selectedItem: PropTypes.shape({ id: PropTypes.string }),
     verifyRedemption: PropTypes.func,
     requestMoreInfo: PropTypes.func,
     closeModal: PropTypes.func,
+    message: PropTypes.shape({
+      type: PropTypes.string,
+      text: PropTypes.string,
+    }),
   }
 
   static getDerivedStateFromProps = (props, state) => {
@@ -63,6 +66,19 @@ class CommentsForm extends Component {
       comment: '',
       errors: [],
     };
+  }
+
+  /**
+   * @function componentDidUpdate
+   * @summary Closes model after showing success message
+   * @param {Object} prevProps
+   */
+  componentDidUpdate(prevProps) {
+    if (prevProps.message.type !== this.props.message.type) {
+      if (this.props.message.type === 'success') {
+        setTimeout(() => this.handleCloseModal(), 3200);
+      }
+    }
   }
 
   /**
@@ -98,7 +114,6 @@ class CommentsForm extends Component {
     } else if (selectedItem.itemType === 'activity') {
       this.props.requestMoreInfo(selectedItem.id, comment);
     }
-    this.handleCloseModal();
   }
 
   /**
@@ -176,7 +191,6 @@ class CommentsForm extends Component {
       placeholderText,
       title,
     } = this.state;
-
     return (
       <form>
         <div className='titleForm titleForm--comment'>{title}</div>
@@ -213,10 +227,11 @@ class CommentsForm extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  verifyRedemption: (redemption, clickAction, comment) =>
-    (dispatch(verifyRedemption(redemption, clickAction, comment))),
-  requestMoreInfo: (id, comment) => dispatch(requestMoreInfo(id, comment)),
+const mapStateToProps = state => ({
+  message: state.commentsInfo.message,
 });
 
-export default connect(null, mapDispatchToProps)(CommentsForm);
+export default connect(mapStateToProps, {
+  verifyRedemption,
+  requestMoreInfo,
+})(CommentsForm);

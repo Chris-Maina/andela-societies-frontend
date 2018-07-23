@@ -8,6 +8,7 @@ import { MemoryRouter } from 'react-router-dom';
 import VerifyActivities from '../../src/containers/VerifyActivities';
 import storeFixture from '../../src/fixtures/store';
 import society from '../../src/fixtures/society';
+import activity from '../../src/fixtures/activity';
 
 const store = createMockStore(storeFixture);
 const history = { push: () => { }, location: { pathname: '' } };
@@ -31,7 +32,6 @@ describe('<VerifyActivities />', () => {
   const component = shallow(<VerifyActivities.WrappedComponent
     {...props}
   />);
-
   it('should render without crashing', () => {
     const wrapperProps = { ...props, userRoles: roles };
     const wrapper = mount.bind(
@@ -58,7 +58,7 @@ describe('<VerifyActivities />', () => {
     const { selectedActivities } = component.state();
     // deselect one activity
     component.instance().handleDeselectActivity(deselectedId);
-    const selected = selectedActivities.filter(activity => activity.id !== deselectedId);
+    const selected = selectedActivities.filter(item => item.id !== deselectedId);
     expect(selectedActivities).toEqual(selected);
   });
 
@@ -90,14 +90,23 @@ describe('<VerifyActivities />', () => {
   it('should call verifyActivity when handleClick is invoked without role as SUCCESS_OPS', () => {
     component.setProps({ userRoles: ['cio'] });
     const instance = component.instance();
-    instance.handleClick('isApproved', '1234t645');
+    instance.handleClick('approved', '1234t645');
     expect(verifyActivitySpy.called).toBeTruthy();
   });
 
   it('should call verifyActivitiesOps when handleClick is invoked with role as SUCCESS_OPS', () => {
     component.setProps({ userRoles: roles });
     const instance = component.instance();
-    instance.handleClick('isApproved', '1234t645');
+    instance.handleClick('approved', '1234t645');
     expect(verifyActivitiesOpsSpy.called).toBeTruthy();
+  });
+
+  it('should change state of selectedActivity to {} when deselectActivity is invoked ', () => {
+    component.setProps({ userRoles: roles });
+    const instance = component.instance();
+    component.setState({ selectedActivity: activity });
+    instance.deselectActivity();
+    expect(component.state().showModal).toBeFalsy();
+    expect(component.state().selectedActivity).toEqual({});
   });
 });

@@ -16,6 +16,7 @@ const commentsReducer = (state = initialState.commentsInfo, action) => {
         text: 'Sending ...',
       },
       requesting: true,
+      hasError: false,
     };
   case MORE_INFO_SUCCESS:
     return {
@@ -32,7 +33,8 @@ const commentsReducer = (state = initialState.commentsInfo, action) => {
       ...state,
       message: {
         type: 'error',
-        text: action.error,
+        text: action.error.response ?
+          action.error.response.data.message : 'Error encountered while submitting your comment. Try again',
       },
       requesting: false,
       hasError: true,
