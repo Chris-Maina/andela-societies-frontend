@@ -9,7 +9,7 @@ import pointsToDollarConverter from '../../helpers/pointsToDollarsConverter';
 
 // constants
 import clickActions from '../../constants/clickAction';
-import { PENDING } from '../../constants/statuses';
+import { PENDING, IN_REVIEW } from '../../constants/statuses';
 
 /**
  * @summary Renders an activity card
@@ -126,7 +126,7 @@ class ActivityCard extends Component {
       handleClick,
     } = this.props;
     const { EDIT } = clickActions;
-    if (status === PENDING && userCanEdit) {
+    if ((status === PENDING || status === IN_REVIEW) && userCanEdit) {
       handleClick(EDIT, id);
     }
   }
@@ -136,7 +136,6 @@ class ActivityCard extends Component {
    */
   renderStatus = () => {
     const status = this.props.status.toLowerCase();
-
     if (this.state.statuses.indexOf(status.toLowerCase()) < 0) {
       return '';
     }
@@ -252,7 +251,7 @@ class ActivityCard extends Component {
     const buttonsOrStatusHtml = this.renderButtonsOrStatus();
 
     const clickableAreaClassName = `activity__right ${
-      status === PENDING && userCanEdit ? 'activity__right--editable' : ''}`;
+      (status === PENDING || status === IN_REVIEW) && userCanEdit ? 'activity__right--editable' : ''}`;
 
     return (
       <div className='activity'>
